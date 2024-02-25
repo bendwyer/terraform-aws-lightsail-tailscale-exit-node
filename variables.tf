@@ -1,11 +1,11 @@
 variable "lightsail_region" {
-  description = "The Amazon Lightsail region to deploy to."
+  description = "AWS Lightsail region to deploy to."
   default     = "eu-central-1"
   type        = string
 }
 
 variable "lightsail_availability_zone" {
-  description = "The chosen availability zone for the Lightsail region."
+  description = "AWS Lightsail availability zone for the AWS Lightsail region."
   default     = "a"
   type        = string
 }
