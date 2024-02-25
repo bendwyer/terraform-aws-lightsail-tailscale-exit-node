@@ -1,0 +1,50 @@
+---
+content: |-
+  {{ .Header }}
+
+  ## Usage
+
+  ### Single exit node
+
+  ```hcl
+  {{ include "examples/single-exit-node/main.tf" }}
+  ```
+
+  ### Multiple exit nodes
+
+  ```hcl
+  {{ include "examples/multiple-exit-nodes/main.tf" }}
+  ```
+
+  ### ACL with multiple exit nodes
+
+  ```hcl
+  {{ include "examples/acl-with-multiple-exit-nodes/main.tf" }}
+  ```
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Modules }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+  {{ .Footer }}
+formatter: "markdown table"
+header-from: main.tf
+output:
+  file: README.md
+  mode: replace
+  template: |-
+    {{ .Content }}
+    {{- printf "\n" -}}
+settings:
+  hide-empty: true
+sort:
+  enabled: true
+  by: required
