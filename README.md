@@ -195,13 +195,13 @@ module "us_exit_node" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_lightsail_availability_zone"></a> [lightsail\_availability\_zone](#input\_lightsail\_availability\_zone) | The chosen availability zone for the Lightsail region. | `string` | `"a"` | no |
-| <a name="input_lightsail_region"></a> [lightsail\_region](#input\_lightsail\_region) | The Amazon Lightsail region to deploy to. | `string` | `"eu-central-1"` | no |
+| <a name="input_lightsail_availability_zone"></a> [lightsail\_availability\_zone](#input\_lightsail\_availability\_zone) | AWS Lightsail availability zone for the AWS Lightsail region. | `string` | `"a"` | no |
+| <a name="input_lightsail_region"></a> [lightsail\_region](#input\_lightsail\_region) | AWS Lightsail region to deploy to. | `string` | `"eu-central-1"` | no |
 | <a name="input_tailscale_exit_node_tag_names"></a> [tailscale\_exit\_node\_tag\_names](#input\_tailscale\_exit\_node\_tag\_names) | Tailscale exit node tag names to associate with ephemeral key. Tag names must be be prefixed with 'tag:' | `set(string)` | <pre>[<br>  "tag:exit"<br>]</pre> | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_public_ip_address"></a> [public\_ip\_address](#output\_public\_ip\_address) | n/a |
+| <a name="output_public_ip_address"></a> [public\_ip\_address](#output\_public\_ip\_address) | AWS Lightsail instance public IP address. |
 
