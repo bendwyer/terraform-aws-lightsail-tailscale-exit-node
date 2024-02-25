@@ -8,7 +8,7 @@ on:
 
 jobs:
   release:
-    uses: bendwyer/github-workflows/.github/workflows/github/prepare-release.yml@main
+    uses: bendwyer/github-workflows/.github/workflows/github-prepare-release.yml@main
     with:
       gh_app_id: ${{ vars.GH_APP_ID }}
     secrets:

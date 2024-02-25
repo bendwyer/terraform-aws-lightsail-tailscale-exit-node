@@ -12,26 +12,26 @@ on:
 
 jobs:
   label:
-    uses: bendwyer/github-workflows/.github/workflows/github/label.yml@main
+    uses: bendwyer/github-workflows/.github/workflows/github-label.yml@main
     with:
       gh_app_id: ${{ vars.GH_APP_ID }}
     secrets:
       gh_app_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
   lint:
-    uses: bendwyer/github-workflows/.github/workflows/terraform/terraform-lint.yml@main
+    uses: bendwyer/github-workflows/.github/workflows/terraform-lint.yml@main
     with:
       gh_app_id: ${{ vars.GH_APP_ID }}
     secrets:
       gh_app_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
   docs:
-    uses: bendwyer/github-workflows/.github/workflows/terraform/terraform-docs.yml@main
+    uses: bendwyer/github-workflows/.github/workflows/terraform-docs.yml@main
     with:
       gh_app_id: ${{ vars.GH_APP_ID }}
     secrets:
       gh_app_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
   check:
     if: always()
-    uses: bendwyer/github-workflows/.github/workflows/github/check.yml@main
+    uses: bendwyer/github-workflows/.github/workflows/github-check.yml@main
     needs:
       - label
       - lint
