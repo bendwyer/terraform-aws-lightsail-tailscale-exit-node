@@ -31,8 +31,10 @@ jobs:
       gh_app_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
   check:
     if: always()
-    uses: bendwyer/github-workflows/.github/workflows/github-check.yml@main
     needs:
       - label
       - lint
       - docs
+    uses: bendwyer/github-workflows/.github/workflows/github-check.yml@main
+    with:
+      jobs: ${{ toJSON(needs) }}
