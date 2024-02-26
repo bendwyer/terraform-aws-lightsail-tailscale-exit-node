@@ -59,9 +59,6 @@ autolabeler:
   - label: bug
     title:
       - "/^fix/i"
-  - label: dependencies
-    title:
-      - "/^dependenc(y|ies)/i"
   - label: patch
     title:
       - "/^patch/i"
