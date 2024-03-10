@@ -44,6 +44,7 @@ module "de_exit_node" {
 
 module "jp_exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
   providers = {
     aws = aws.jp
   }
