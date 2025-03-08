@@ -168,10 +168,10 @@ module "us_exit_node" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=5.37.0 |
 | <a name="requirement_tailscale"></a> [tailscale](#requirement\_tailscale) | >=0.13.13 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.10.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >=0.10.0 |
 
 ## Providers
 
@@ -179,7 +179,7 @@ module "us_exit_node" {
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >=5.37.0 |
 | <a name="provider_tailscale"></a> [tailscale](#provider\_tailscale) | >=0.13.13 |
-| <a name="provider_time"></a> [time](#provider\_time) | >= 0.10.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | >=0.10.0 |
 
 
 
