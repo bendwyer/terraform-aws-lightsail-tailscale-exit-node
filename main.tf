@@ -14,7 +14,7 @@ resource "aws_lightsail_instance" "this" {
   name              = "vpn-${var.lightsail_region}-${formatdate("YYYYMMDDhhmmss", "${time_static.this.rfc3339}")}"
   availability_zone = "${var.lightsail_region}${var.lightsail_availability_zone}"
   blueprint_id      = "amazon_linux_2023"
-  bundle_id         = "nano_2_0"
+  bundle_id         = "nano_3_0"
   user_data = templatefile("${path.module}/userdata.sh.tftpl", {
     tailscale_preauth_key = tailscale_tailnet_key.this.key
     tailscale_hostname    = "${var.lightsail_region}-${formatdate("YYYYMMDDhhmmss", "${time_static.this.rfc3339}")}"
