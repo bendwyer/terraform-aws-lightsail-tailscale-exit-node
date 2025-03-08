@@ -20,10 +20,6 @@ resource "aws_lightsail_instance" "this" {
     tailscale_hostname    = "${var.lightsail_region}-${formatdate("YYYYMMDDhhmmss", "${time_static.this.rfc3339}")}"
   })
   ip_address_type = "dualstack"
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_lightsail_instance_public_ports" "this" {
