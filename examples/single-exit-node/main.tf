@@ -5,23 +5,15 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    tailscale = {
-      source  = "tailscale/tailscale"
-      version = "~> 0.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.0"
-    }
   }
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.lightsail_region
 }
-
-provider "tailscale" {}
 
 module "exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
+  lightsail_instance_name = "vpn-${var.lightsail_region}"
 }

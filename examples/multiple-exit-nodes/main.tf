@@ -5,19 +5,11 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    tailscale = {
-      source  = "tailscale/tailscale"
-      version = "~> 0.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.0"
-    }
   }
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.lightsail_region
 }
 
 provider "aws" {
@@ -30,18 +22,22 @@ provider "aws" {
   region = "us-east-1"
 }
 
-provider "tailscale" {}
-
 module "de_exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
+  lightsail_instance_name = "vpn-${var.lightsail_region}"
 }
 
 module "jp_exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
   providers = {
     aws = aws.jp
   }
-  lightsail_region = "ap-northeast-1"
+
+  lightsail_instance_name        = "vpn-ap-northeast-1"
+  lightsail_region               = "ap-northeast-1"
+  lightsail_region_friendly_name = "tokyo"
 }
 
 module "us_exit_node" {
@@ -50,5 +46,8 @@ module "us_exit_node" {
   providers = {
     aws = aws.us
   }
-  lightsail_region = "us-east-1"
+
+  lightsail_instance_name        = "vpn-us-east-1"
+  lightsail_region               = "us-east-1"
+  lightsail_region_friendly_name = "ohio"
 }
