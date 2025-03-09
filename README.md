@@ -3,7 +3,8 @@
 Terraform module for deploying a Tailscale exit node on AWS Lightsail.
 
 > [!WARNING]\
-> This module requires a tag defined in Tailscale access controls.
+> This module requires a tag defined in Tailscale Access Controls.
+> This module requires an OAuth client with at least the following scopes: devices:core write, keys:auth-keys write
 
 ## Usage
 
@@ -17,25 +18,17 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    tailscale = {
-      source  = "tailscale/tailscale"
-      version = "~> 0.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.0"
-    }
   }
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.lightsail_region
 }
-
-provider "tailscale" {}
 
 module "exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
+  lightsail_instance_name = "vpn-${var.lightsail_region}"
 }
 ```
 
@@ -49,19 +42,11 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    tailscale = {
-      source  = "tailscale/tailscale"
-      version = "~> 0.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.0"
-    }
   }
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.lightsail_region
 }
 
 provider "aws" {
@@ -74,18 +59,22 @@ provider "aws" {
   region = "us-east-1"
 }
 
-provider "tailscale" {}
-
 module "de_exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
+  lightsail_instance_name = "vpn-${var.lightsail_region}"
 }
 
 module "jp_exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
   providers = {
     aws = aws.jp
   }
-  lightsail_region = "ap-northeast-1"
+
+  lightsail_instance_name        = "vpn-ap-northeast-1"
+  lightsail_region               = "ap-northeast-1"
+  lightsail_region_friendly_name = "tokyo"
 }
 
 module "us_exit_node" {
@@ -94,7 +83,10 @@ module "us_exit_node" {
   providers = {
     aws = aws.us
   }
-  lightsail_region = "us-east-1"
+
+  lightsail_instance_name        = "vpn-us-east-1"
+  lightsail_region               = "us-east-1"
+  lightsail_region_friendly_name = "ohio"
 }
 ```
 
@@ -112,15 +104,11 @@ terraform {
       source  = "tailscale/tailscale"
       version = "~> 0.0"
     }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.0"
-    }
   }
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.lightsail_region
 }
 
 provider "aws" {
@@ -137,12 +125,15 @@ provider "tailscale" {}
 
 resource "tailscale_acl" "this" {
   acl = templatefile("${path.root}/acl.json.tftpl", {
-    tailscale_exit_node_tag_name = "exit"
+    tailscale_exit_node_tag = var.tailscale_exit_node_tag
   })
+  reset_acl_on_destroy = true
 }
 
 module "de_exit_node" {
   source = "github.com/bendwyer/terraform-aws-lightsail-tailscale-exit-node"
+
+  lightsail_instance_name = "vpn-${var.lightsail_region}"
 }
 
 module "jp_exit_node" {
@@ -151,7 +142,9 @@ module "jp_exit_node" {
   providers = {
     aws = aws.jp
   }
-  lightsail_region = "ap-northeast-1"
+  lightsail_instance_name        = "vpn-ap-northeast-1"
+  lightsail_region               = "ap-northeast-1"
+  lightsail_region_friendly_name = "tokyo"
 }
 
 module "us_exit_node" {
@@ -160,7 +153,10 @@ module "us_exit_node" {
   providers = {
     aws = aws.us
   }
-  lightsail_region = "us-east-1"
+
+  lightsail_instance_name        = "vpn-us-east-1"
+  lightsail_region               = "us-east-1"
+  lightsail_region_friendly_name = "ohio"
 }
 ```
 
@@ -168,18 +164,14 @@ module "us_exit_node" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.10.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=5.37.0 |
-| <a name="requirement_tailscale"></a> [tailscale](#requirement\_tailscale) | >=0.13.13 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | >=0.10.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >=5.37.0 |
-| <a name="provider_tailscale"></a> [tailscale](#provider\_tailscale) | >=0.13.13 |
-| <a name="provider_time"></a> [time](#provider\_time) | >=0.10.0 |
 
 
 
@@ -189,16 +181,21 @@ module "us_exit_node" {
 |------|------|
 | [aws_lightsail_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lightsail_instance) | resource |
 | [aws_lightsail_instance_public_ports.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lightsail_instance_public_ports) | resource |
-| [tailscale_tailnet_key.this](https://registry.terraform.io/providers/tailscale/tailscale/latest/docs/resources/tailnet_key) | resource |
-| [time_static.this](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/static) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_lightsail_availability_zone"></a> [lightsail\_availability\_zone](#input\_lightsail\_availability\_zone) | AWS Lightsail availability zone for the AWS Lightsail region. | `string` | `"a"` | no |
+| <a name="input_lightsail_instance_name"></a> [lightsail\_instance\_name](#input\_lightsail\_instance\_name) | Display name for instance in Lightsail dashboard. | `string` | n/a | yes |
+| <a name="input_tailscale_hostname"></a> [tailscale\_hostname](#input\_tailscale\_hostname) | Display name for instance in Tailscale dashboard | `string` | n/a | yes |
+| <a name="input_tailscale_oauth_client_id"></a> [tailscale\_oauth\_client\_id](#input\_tailscale\_oauth\_client\_id) | Tailscale OAuth client ID. | `string` | n/a | yes |
+| <a name="input_tailscale_oauth_client_secret"></a> [tailscale\_oauth\_client\_secret](#input\_tailscale\_oauth\_client\_secret) | Tailscale OAuth client secret. | `string` | n/a | yes |
+| <a name="input_lightsail_availability_zone"></a> [lightsail\_availability\_zone](#input\_lightsail\_availability\_zone) | AWS Lightsail availability zone for AWS Lightsail region. | `string` | `"a"` | no |
+| <a name="input_lightsail_bundle_id"></a> [lightsail\_bundle\_id](#input\_lightsail\_bundle\_id) | AWS Lightsail bundle ID. Determines type of instance to deploy. | `string` | `"nano_3_0"` | no |
 | <a name="input_lightsail_region"></a> [lightsail\_region](#input\_lightsail\_region) | AWS Lightsail region to deploy to. | `string` | `"eu-central-1"` | no |
-| <a name="input_tailscale_exit_node_tag_names"></a> [tailscale\_exit\_node\_tag\_names](#input\_tailscale\_exit\_node\_tag\_names) | Tailscale exit node tag names to associate with ephemeral key. Tag names must be be prefixed with 'tag:' | `set(string)` | <pre>[<br/>  "tag:exit"<br/>]</pre> | no |
+| <a name="input_lightsail_region_friendly_name"></a> [lightsail\_region\_friendly\_name](#input\_lightsail\_region\_friendly\_name) | Friendly name for AWS Lightsail region to deploy to. | `string` | `"frankfurt"` | no |
+| <a name="input_lightsail_tags"></a> [lightsail\_tags](#input\_lightsail\_tags) | A map of key-value pairs used to create AWS Lightsail instance tags. By default no tags will be created. | `map(string)` | `null` | no |
+| <a name="input_tailscale_exit_node_tag"></a> [tailscale\_exit\_node\_tag](#input\_tailscale\_exit\_node\_tag) | Tailscale exit node tag to associate with machine(s). Tag must be be prefixed with 'tag:' | `string` | `"tag:exit"` | no |
 
 ## Outputs
 
