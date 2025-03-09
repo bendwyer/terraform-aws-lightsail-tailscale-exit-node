@@ -4,22 +4,26 @@
  * Terraform module for deploying a Tailscale exit node on AWS Lightsail.
  *
  * > [!WARNING]\
- * > This module requires a tag defined in Tailscale access controls.
+ * > This module requires a tag defined in Tailscale Access Controls.
+ *
+ * > [!WARNING]\
+ * > This module requires an OAuth client with at least the following scopes: `devices:core=write`, `keys:auth-keys=write`.
  *
  */
 
-resource "time_static" "this" {}
-
 resource "aws_lightsail_instance" "this" {
-  name              = "vpn-${var.lightsail_region}-${formatdate("YYYYMMDDhhmmss", "${time_static.this.rfc3339}")}"
+  name              = var.lightsail_instance_name
   availability_zone = "${var.lightsail_region}${var.lightsail_availability_zone}"
   blueprint_id      = "amazon_linux_2023"
-  bundle_id         = "nano_3_0"
+  bundle_id         = var.lightsail_bundle_id
   user_data = templatefile("${path.module}/userdata.sh.tftpl", {
-    tailscale_preauth_key = tailscale_tailnet_key.this.key
-    tailscale_hostname    = "${var.lightsail_region}-${formatdate("YYYYMMDDhhmmss", "${time_static.this.rfc3339}")}"
+    tailscale_exit_node_tag       = var.tailscale_exit_node_tag
+    tailscale_hostname            = var.tailscale_hostname
+    tailscale_oauth_client_id     = var.tailscale_oauth_client_id
+    tailscale_oauth_client_secret = var.tailscale_oauth_client_secret
   })
   ip_address_type = "dualstack"
+  tags            = var.lightsail_tags
 }
 
 resource "aws_lightsail_instance_public_ports" "this" {
@@ -43,14 +47,4 @@ resource "aws_lightsail_instance_public_ports" "this" {
       aws_lightsail_instance.this
     ]
   }
-}
-
-resource "tailscale_tailnet_key" "this" {
-  description         = "preauth-ephemeral-exit"
-  expiry              = 7776000
-  ephemeral           = true
-  preauthorized       = true
-  recreate_if_invalid = "always"
-  reusable            = true
-  tags                = var.tailscale_exit_node_tag_names
 }
