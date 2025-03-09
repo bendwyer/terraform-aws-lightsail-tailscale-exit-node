@@ -4,8 +4,8 @@
  * Terraform module for deploying a Tailscale exit node on AWS Lightsail.
  *
  * > [!WARNING]\
- * > This module requires a tag defined in Tailscale Access Controls.
- * > This module requires an OAuth client with at least the following scopes: devices:core write, keys:auth-keys write
+ * > - This module requires a tag defined in Tailscale Access Controls.
+ * > - This module requires an OAuth client with at least the following scopes: devices:core write, keys:auth-keys write
  *
  */
 
